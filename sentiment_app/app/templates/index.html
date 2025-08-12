@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Sentiment Analysis</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { max-width: 720px; margin: 2rem auto; font-family: system-ui, Arial, sans-serif; }
+    textarea { width: 100%; min-height: 110px; }
+    .card { padding: 1rem; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 1rem; }
+    .muted { color: #666; font-size: 0.95rem; }
+    .history-item { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px dashed #eee; }
+  </style>
+</head>
+<body>
+  <h1>Sentiment Analysis</h1>
+
+  <div class="card">
+    <form method="POST">
+      {{ form.hidden_tag() }}  <!-- CSRF token lives here -->
+      <label for="{{ form.text.id }}">{{ form.text.label.text }}</label><br>
+      {{ form.text(cols=80, rows=5) }}<br><br>
+      {{ form.submit() }}
+    </form>
+  </div>
+
+  {% if prediction %}
+    <div class="card">
+      <strong>Prediction:</strong> {{ prediction }}
+    </div>
+  {% endif %}
+
+  <div class="card">
+    <h2>Recent Analyses</h2>
+    {% if history %}
+      {% for item in history %}
+        <div class="history-item">
+          <div>
+            <div><strong>“{{ item.text }}”</strong></div>
+            <div class="muted">{{ item.created_at.strftime("%Y-%m-%d %H:%M") }}</div>
+          </div>
+          <div><strong>{{ item.sentiment }}</strong></div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="muted">No entries yet.</div>
+    {% endif %}
+  </div>
+</body>
+</html>
